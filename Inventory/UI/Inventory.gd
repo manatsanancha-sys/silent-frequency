@@ -11,6 +11,11 @@ extends CenterContainer
 @onready var interaction_info: Label = $CenterContainer2/InteractionInfoLabel
 @onready var interaction_anim_player: AnimationPlayer = $InteractionAnimPlayer
 
+# The Silent Frequency: ระบบ crafting ของ template ปิดไว้ (ไม่ได้ลบ)
+# เปลี่ยนเป็น true เพื่อเปิดแผง Craft กลับมา — ไฟล์ทั้งหมดยังอยู่ใน
+# Inventory/CraftItemResource.gd, Inventory/UI/CraftItem*.gd, Interaction/Items/CraftSystem/
+const CRAFTING_ENABLED := false
+
 var slots = []
 var selected_slot 
 var used_slots = {}
@@ -21,6 +26,7 @@ func _ready():
 	Inventory.item_removed.connect(reload_items)
 	Inventory.unselect_item.connect(unselect_item)
 	container.visible = false
+	craft_container.get_parent().visible = CRAFTING_ENABLED
 	selected_item_texture.visible = true
 	title_label.text = ""
 	description_label.text = ""
@@ -116,6 +122,8 @@ func on_slot_pressed(slot):
 	toggle_use_item_button()
 
 func create_craft_items(item: ItemResource):
+	if not CRAFTING_ENABLED:
+		return
 	for i in item.crafted_items:
 		var craft_panel = CraftItemPanel.create(i)
 		craft_container.add_child(craft_panel)
