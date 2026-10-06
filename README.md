@@ -132,7 +132,13 @@ godot --headless --path . --quit-after 120
 ## GitHub
 Remote: `https://github.com/manatsanancha-sys/silent-frequency.git` (branch `main`)
 
-<!-- PUSH_STATUS -->
+push ขึ้น GitHub สำเร็จแล้ว (`git push -u origin main`, 2026-10-06) หลังจากนี้ใช้แค่:
+```bash
+git add -A
+git commit -m "ข้อความ"
+git push
+```
+ถ้าเครื่องอื่น push ไม่ได้ (ยังไม่ login): ติดตั้ง GitHub CLI แล้วรัน `gh auth login` หรือใช้ Personal Access Token แทนรหัสผ่านตอน git ถาม
 
 ---
 
