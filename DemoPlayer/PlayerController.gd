@@ -22,6 +22,11 @@ func get_flashlight():
 	return camera
 
 
+# Inventory.gd ของ template เรียกฟังก์ชันนี้ตอนใช้ไอเท็มจนหมด แต่ template ไม่ได้ประกาศไว้
+func unset_selected_item():
+	Inventory.unselect_item.emit()
+
+
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	Inventory.player = self

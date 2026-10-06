@@ -102,7 +102,7 @@ func update_lock(source: FrequencySource, delta: float):
 
 
 func _get_listener_position() -> Vector3:
-	var parent := get_parent()
+	var parent = get_parent()
 	if parent is Node3D:
 		return parent.global_position
 	return Vector3.ZERO

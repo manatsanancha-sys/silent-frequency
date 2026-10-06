@@ -14,10 +14,10 @@ class_name EnemyAI
 ## - แอนิเมชัน/เสียงของแต่ละ state, จับผู้เล่นได้ → game over
 ## - ไฟฉายผู้เล่นส่องโดน → ศัตรูสังเกตเห็นง่ายขึ้น?
 
+enum State { PATROL, INVESTIGATE, CHASE }
+
 signal state_changed(new_state: State)
 signal caught_player
-
-enum State { PATROL, INVESTIGATE, CHASE }
 
 @export var patrol_points: Array[Node3D] = []
 @export var patrol_speed := 1.5
