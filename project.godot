@@ -19,6 +19,8 @@ config/icon="res://icon.svg"
 [autoload]
 
 Inventory="*res://Inventory/InventorySingleton.gd"
+NoiseBus="*res://Game/Systems/noise_bus.gd"
+PlayerStealth="*res://Game/Systems/Hiding/player_stealth.gd"
 
 [input]
 
