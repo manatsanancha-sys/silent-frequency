@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://7gv6q50fuutj"]
 
 [ext_resource type="Script" path="res://DemoPlayer/PlayerController.gd" id="1_1w47b"]
-[ext_resource type="PackedScene" uid="uid://btmhluxvgkqaj" path="res://Interaction/Items/Camcorder/camcorder.tscn" id="2_cmtlv"]
+[ext_resource type="PackedScene" path="res://Game/Player/Flashlight/flashlight.tscn" id="2_cmtlv"]
 [ext_resource type="Script" path="res://DemoPlayer/FPSLabel.gd" id="3_2xee4"]
 [ext_resource type="Texture2D" uid="uid://cbjnevco3k2f8" path="res://DemoPlayer/white_dot.png" id="4_81rte"]
 [ext_resource type="PackedScene" uid="uid://bqmp43ce5wwdp" path="res://Inventory/UI/Inventory.tscn" id="5_so4qc"]
@@ -11,10 +11,10 @@ script = ExtResource("1_1w47b")
 
 [node name="Head" type="Node3D" parent="."]
 
-[node name="Camcorder" parent="Head" instance=ExtResource("2_cmtlv")]
+[node name="Flashlight" parent="Head" instance=ExtResource("2_cmtlv")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0019784, 0.463099, -0.468491)
 
-[node name="RayCast3D" type="RayCast3D" parent="Head/Camcorder"]
+[node name="RayCast3D" type="RayCast3D" parent="Head/Flashlight"]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
 target_position = Vector3(2, 0, 0)
 collision_mask = 8
@@ -35,6 +35,8 @@ grow_vertical = 0
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 8
 text = "Move: AWSD
+Flashlight: Q (empty = auto recharge)
+Crouch/Hide: C   Frequency Finder: F
 Inventory: I
 E: Interaction
 Hold E + Mouse to Drag (Door, Drawer, Lever)

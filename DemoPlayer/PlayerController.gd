@@ -2,8 +2,9 @@ extends Node
 
 class_name Player
 
-@onready var camera = $Head/Camcorder as Camera3D
-@onready var ray_cast: RayCast3D = $Head/Camcorder/RayCast3D
+# The Silent Frequency: กล้อง camcorder ถูกแทนด้วยไฟฉาย (Game/Player/Flashlight)
+@onready var camera = $Head/Flashlight as Camera3D
+@onready var ray_cast: RayCast3D = $Head/Flashlight/RayCast3D
 @onready var interaction_label: Label = $CenterContainer/Label
 @onready var inventory = $Inventory
 
@@ -15,6 +16,10 @@ func enable_camera_movement():
 	can_move_camera = true
 	interaction_label.visible = true
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+
+func get_flashlight():
+	return camera
 
 
 func _ready():

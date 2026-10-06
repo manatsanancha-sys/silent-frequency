@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" uid="uid://btmhluxvgkqaj" path="res://Interaction/Items/Camcorder/camcorder.tscn" id="1_camc"]
+[ext_resource type="Script" path="res://Game/Player/Flashlight/flashlight.gd" id="2_flsh"]
+
+[node name="Flashlight" instance=ExtResource("1_camc")]
+script = ExtResource("2_flsh")
+
+[node name="SpotLight3D" parent="."]
+light_energy = 3.0
+spot_range = 18.0
+spot_angle = 30.0
+spot_attenuation = 1.2
+
+[node name="Timer" parent="."]
+autostart = false
