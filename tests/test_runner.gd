@@ -77,10 +77,23 @@ func test_full_win_path():
 
 	# --- ปริศนา 2: จูน 3 คลื่น
 	var finder := player.finder
+	check(enemy.in_grace(), "grace period active right after power on")
+	var picks_ok := true
+	for i in 40:
+		enemy._next_waypoint()
+		if enemy.waypoints[enemy._wp_index].is_in_group("wp_signal_room"):
+			picks_ok = false
+	check(picks_ok, "grace: patrol never picks signal room waypoints")
+	var st_before := enemy.state
+	NoiseBus.emit_noise(enemy.global_position + Vector3(1, 0, 0), 10.0, null)
+	await _physics(2)
+	check(enemy.state == st_before, "grace: enemy ignores noises")
+	# จุดยืนจูนคลื่นตาม TESTING.md (ผังขยาย 1.5 เท่า)
+	var tune_spots := {0: Vector3(-12, 0.05, -11.5), 1: Vector3(10.5, 0.05, 0.5), 2: Vector3(-1.5, 0.05, 8.0)}
 	for src in get_tree().get_nodes_in_group("frequency_sources"):
-		var offsets := [Vector3(0, 0, 2.0), Vector3(-1.5, 0, 0), Vector3(0.6, 0, -1.6)]
-		player.teleport(Vector3(src.global_position.x, 0.05, src.global_position.z) + offsets[src.freq_index], 0.0)
+		player.teleport(tune_spots[src.freq_index], 0.0)
 		await _physics(3)
+		check(finder._nearest_source() == src, "freq %d: tuning spot is inside its zone" % src.freq_index)
 		if not finder.is_on:
 			finder.set_on(true)
 		finder.current_mhz = src.get_mhz() - 1.0
@@ -244,9 +257,11 @@ func test_enemy_ai():
 	enemy.rotation.y = deg_to_rad(-90)  # หันไป +X
 	player.teleport(Vector3(6, 0.05, 0), 0.0)
 	player.flashlight_on = true
-	await _physics(3)
+	await _physics(2)
 	check(enemy.can_see_player(), "sees lit player in front")
-	check(enemy.state == EnemyAI.State.CHASE, "sees player → CHASE")
+	check(enemy.state != EnemyAI.State.CHASE, "does not chase instantly (sight confirm %.1fs)" % enemy.sight_confirm_time)
+	await _wait_until(func(): return enemy.state == EnemyAI.State.CHASE, 3.0)
+	check(enemy.state == EnemyAI.State.CHASE, "keeps seeing player → CHASE")
 	var e_pos := enemy.global_position
 	await _physics(2)
 	check(enemy.global_position.distance_to(e_pos) > 0.05, "chasing moves along navmesh")
@@ -266,7 +281,67 @@ func test_enemy_ai():
 	spot.interact(player)
 	check(not player.is_hidden, "left hiding spot")
 	# speed balance
-	check(enemy.chase_speed > player.walk_speed and enemy.chase_speed < player.run_speed, "chase speed between walk and run")
+	check(enemy.chase_speed > player.walk_speed and enemy.chase_speed < player.run_speed * 0.85, "chase speed: faster than walk, clearly slower than run")
+	await test_enemy_doors(st, player, enemy)
+
+
+## ศัตรูเดินผ่านประตูทุกบาน (ห้องรับสัญญาณ, ห้องเก็บของ, ห้องหัวหน้า, โถงทางออก) ครบรอบโดยไม่ติด
+func test_enemy_doors(st, player: Player3D, enemy: EnemyAI):
+	print("\n[enemy walks through every door]")
+	var all_wps: Array[Node3D] = enemy.waypoints.duplicate()
+	var hide_spot = st.get_node("Interactables/Hide_LobbyLocker")
+	player.teleport(hide_spot.global_position + Vector3(1.2, -1.0, 0), 0.0)
+	hide_spot.interact(player)  # ซ่อนไว้ ศัตรูจะได้ไม่สนผู้เล่น
+	check(player.is_hidden, "player hidden for patrol test")
+	var route := ["WP_Signal_A", "WP_Corridor_W", "WP_Storage_A", "WP_Storage_B", "WP_Corridor_M", "WP_Chief_A",
+		"WP_Chief_B", "WP_Corridor_E", "WP_Lobby_A", "WP_Lobby_B", "WP_Corridor_E", "WP_Signal_B"]
+	enemy.activate(st.get_node("Waypoints/WP_Signal_B").global_position)
+	var teleports_before := enemy.stuck_teleports
+	var repaths_before := enemy.stuck_repaths
+	var all_ok := true
+	var game_time := 0.0
+	for name in route:
+		var wp: Node3D = st.get_node("Waypoints/" + name)
+		var single: Array[Node3D] = [wp]
+		enemy.waypoints = single
+		enemy._wp_index = -1
+		enemy.enter_state(EnemyAI.State.PATROL)
+		var limit := enemy.global_position.distance_to(wp.global_position) / enemy.patrol_speed * 2.0 + 4.0
+		var t0 := Time.get_ticks_msec()
+		var t := 0.0
+		while t < limit and enemy.global_position.distance_to(wp.global_position) > 1.0:
+			await get_tree().physics_frame
+			t += get_physics_process_delta_time()
+		game_time += t
+		var ok := enemy.global_position.distance_to(wp.global_position) <= 1.0
+		all_ok = all_ok and ok
+		check(ok, "reached %s (%.1fs, limit %.1fs)" % [name, t, limit])
+	check(all_ok, "full patrol loop through all 4 doors in %.0fs game time" % game_time)
+	check(enemy.stuck_teleports == teleports_before, "no stuck-teleport needed (repaths: %d)" % (enemy.stuck_repaths - repaths_before))
+	# บังคับให้ติด: วางกล่องขวางประตูห้องเก็บของ (navmesh ไม่รู้) → ต้อง repath แล้ววาร์ป
+	var blocker := StaticBody3D.new()
+	var cs := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(3.0, 3.0, 1.2)
+	cs.shape = box
+	blocker.add_child(cs)
+	st.add_child(blocker)
+	blocker.global_position = Vector3(-1.5, 1.5, 2.4)
+	enemy.activate(Vector3(-1.5, 0.05, -0.5))
+	var target_wp: Array[Node3D] = [st.get_node("Waypoints/WP_Storage_A")]
+	enemy.waypoints = target_wp
+	enemy._wp_index = -1
+	enemy.enter_state(EnemyAI.State.PATROL)
+	enemy.waypoints = all_wps  # จุดวาร์ปเลือกจาก waypoint ทั้งหมด
+	var rp := enemy.stuck_repaths
+	var tp := enemy.stuck_teleports
+	await _wait_until(func(): return enemy.stuck_teleports > tp, 12.0)
+	check(enemy.stuck_repaths > rp, "stuck → requests new path first")
+	check(enemy.stuck_teleports > tp, "still stuck → teleports to hidden waypoint")
+	check(not enemy._player_can_see_point(enemy.global_position + Vector3.UP * 1.5), "teleport point not visible to player")
+	blocker.queue_free()
+	enemy.waypoints = all_wps
+	hide_spot.interact(player)
 
 
 # ------------------------------------------------------------------ helpers
@@ -286,7 +361,7 @@ func _check_navmesh(st):
 	check(polys > 0, "navmesh baked (%d polygons)" % polys)
 	await _physics(3)
 	var map := region.get_navigation_map()
-	var from := Vector3(-8, 0, -4.5)
+	var from: Vector3 = st.get_node("PlayerSpawn").global_position
 	for wp in st.get_node("Waypoints").get_children():
 		var to: Vector3 = wp.global_position
 		var path := NavigationServer3D.map_get_path(map, from, to, true)
