@@ -24,7 +24,7 @@ ambient_light_energy = 0.06
 tonemap_mode = 2
 fog_enabled = true
 fog_light_color = Color(0.03, 0.035, 0.05, 1)
-fog_density = 0.045
+fog_density = 0.04
 
 [sub_resource type="StandardMaterial3D" id="Mat_Wall"]
 albedo_color = Color(0.42, 0.42, 0.4, 1)
@@ -44,10 +44,10 @@ emission_energy_multiplier = 1.4
 
 [sub_resource type="BoxMesh" id="Mesh_Screen"]
 material = SubResource("Mat_Screen")
-size = Vector3(2.2, 0.45, 0.04)
+size = Vector3(3.2, 0.45, 0.04)
 
 [sub_resource type="BoxShape3D" id="Shape_Exit"]
-size = Vector3(1.2, 2.4, 3.0)
+size = Vector3(1.6, 2.6, 4.0)
 
 [node name="RadioStation" type="Node3D"]
 script = ExtResource("station")
@@ -62,232 +62,243 @@ navigation_mesh = ExtResource("navmesh")
 use_collision = true
 
 [node name="SignalRoom_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -5.7)
-size = Vector3(8.4, 3.4, 8.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, -8.55)
+size = Vector3(12.4, 3.4, 12.4)
 material = SubResource("Mat_Wall")
 
 [node name="Corridor_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-size = Vector3(24.4, 3.4, 3.4)
+size = Vector3(36.4, 3.4, 4.9)
 material = SubResource("Mat_Wall")
 
 [node name="Storage_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.5, 4.7)
-size = Vector3(6.4, 3.4, 6.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.5, 7.05)
+size = Vector3(9.4, 3.4, 9.4)
 material = SubResource("Mat_Wall")
 
 [node name="ChiefOffice_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
-size = Vector3(8.4, 3.4, 8.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -8.55)
+size = Vector3(12.4, 3.4, 12.4)
 material = SubResource("Mat_Wall")
 
 [node name="Lobby_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.5, 0)
-size = Vector3(6.2, 3.4, 8.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.65, 1.5, 0)
+size = Vector3(9.1, 3.4, 12.4)
 material = SubResource("Mat_Wall")
 
 [node name="SignalRoom_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, -8.55)
 operation = 2
-size = Vector3(8, 3, 8)
+size = Vector3(12, 3, 12)
 
 [node name="Corridor_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 operation = 2
-size = Vector3(24, 3, 3)
+size = Vector3(36, 3, 4.5)
 
 [node name="Storage_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.5, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.5, 7.05)
 operation = 2
-size = Vector3(6, 3, 6)
+size = Vector3(9, 3, 9)
 
 [node name="ChiefOffice_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.5, -8.55)
 operation = 2
-size = Vector3(8, 3, 8)
+size = Vector3(12, 3, 12)
 
 [node name="Lobby_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.65, 1.5, 0)
 operation = 2
-size = Vector3(5.8, 3, 8)
+size = Vector3(8.7, 3, 12)
 
 [node name="Door_Lobby" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 1.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.15, 1.3, 0)
 operation = 2
-size = Vector3(0.6, 2.3, 1.6)
+size = Vector3(1, 2.6, 2.2)
 
 [node name="Door_Signal" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.15, -1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.3, -2.4)
 operation = 2
-size = Vector3(1.6, 2.3, 0.6)
+size = Vector3(2.2, 2.6, 1)
 
 [node name="Door_Chief" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.15, -1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1.3, -2.4)
 operation = 2
-size = Vector3(1.6, 2.3, 0.6)
+size = Vector3(2.2, 2.6, 1)
 
 [node name="Door_Storage" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 1.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.3, 2.4)
 operation = 2
-size = Vector3(1.6, 2.3, 0.6)
+size = Vector3(2.2, 2.6, 1)
 
 [node name="Door_Exit" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1, 1.15, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.1, 1.3, 0)
 operation = 2
-size = Vector3(0.6, 2.3, 1.6)
+size = Vector3(1, 2.6, 2.2)
 
 [node name="SignalRoom_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.005, -5.7)
-size = Vector3(8, 0.01, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.005, -8.55)
+size = Vector3(12, 0.01, 12)
 material = SubResource("Mat_Floor")
 
 [node name="Corridor_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
-size = Vector3(24, 0.01, 3)
+size = Vector3(36, 0.01, 4.5)
 material = SubResource("Mat_Floor")
 
 [node name="Storage_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.005, 4.7)
-size = Vector3(6, 0.01, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.005, 7.05)
+size = Vector3(9, 0.01, 9)
 material = SubResource("Mat_Floor")
 
 [node name="ChiefOffice_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.005, -5.7)
-size = Vector3(8, 0.01, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.005, -8.55)
+size = Vector3(12, 0.01, 12)
 material = SubResource("Mat_Floor")
 
 [node name="Lobby_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 0.005, 0)
-size = Vector3(5.8, 0.01, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.65, 0.005, 0)
+size = Vector3(8.7, 0.01, 12)
 material = SubResource("Mat_Floor")
 
 [node name="RadioConsole" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -9)
-size = Vector3(5, 1, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.5, -13.85)
+size = Vector3(7, 1, 1)
 material = SubResource("Mat_Prop")
 
 [node name="RadioRack" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4, 1, -6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.4, 1, -9)
 size = Vector3(1, 2, 3)
 material = SubResource("Mat_Prop")
 
 [node name="ChiefDesk" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.4, -7)
-size = Vector3(2.4, 0.8, 1.2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.4, -10.5)
+size = Vector3(3.4, 0.8, 1.4)
 material = SubResource("Mat_Prop")
 
 [node name="ChiefShelf" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 1, -6.75)
 size = Vector3(0.8, 2, 2.5)
 material = SubResource("Mat_Prop")
 
 [node name="Shelf_A" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 1, 4.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 1, 6.9)
 size = Vector3(1, 2, 3.6)
 material = SubResource("Mat_Prop")
 
 [node name="Shelf_B" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1, 7.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, 1, 10.95)
 size = Vector3(2.6, 2, 1)
 material = SubResource("Mat_Prop")
 
 [node name="Crate" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.4, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.4, 4.5)
 size = Vector3(0.8, 0.8, 0.8)
 material = SubResource("Mat_Prop")
 
+[node name="Crate_B" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 0.45, 3.9)
+size = Vector3(0.9, 0.9, 0.9)
+material = SubResource("Mat_Prop")
+
 [node name="LobbyBench" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 0.25, 2.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.3, 0.25, 4.2)
 size = Vector3(1, 0.5, 2)
 material = SubResource("Mat_Prop")
 
 [node name="LobbyCounter" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.55, -3.3)
-size = Vector3(3, 1.1, 0.8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.75, 0.55, -5.3)
+size = Vector3(4, 1.1, 0.8)
 material = SubResource("Mat_Prop")
 
 [node name="Porch" type="CSGBox3D" parent="NavigationRegion3D/Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, -0.1, 0)
-size = Vector3(5.6, 0.2, 6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.4, -0.1, 0)
+size = Vector3(8.4, 0.2, 9)
 material = SubResource("Mat_Prop")
 
 [node name="Lights" type="Node3D" parent="."]
 
 [node name="Emergency_0" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.7, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.7, -8.55)
 light_color = Color(0.85, 0.18, 0.1, 1)
-light_energy = 0.3
-omni_range = 6.5
+light_energy = 0.32
+omni_range = 9.75
 
 [node name="Emergency_1" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2.7, 0)
 light_color = Color(0.85, 0.18, 0.1, 1)
 light_energy = 0.22
-omni_range = 6.5
+omni_range = 9.75
 
 [node name="Emergency_2" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
 light_color = Color(0.85, 0.18, 0.1, 1)
-light_energy = 0.22
-omni_range = 6.5
+light_energy = 0.18
+omni_range = 9.75
 
 [node name="Emergency_3" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 2.7, 0)
 light_color = Color(0.85, 0.18, 0.1, 1)
-light_energy = 0.18
-omni_range = 6.5
+light_energy = 0.22
+omni_range = 9.75
 
 [node name="Emergency_4" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.7, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.7, 7.05)
 light_color = Color(0.85, 0.18, 0.1, 1)
-light_energy = 0.18
-omni_range = 6.5
+light_energy = 0.2
+omni_range = 9.75
 
 [node name="Emergency_5" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.7, -8.55)
 light_color = Color(0.85, 0.18, 0.1, 1)
-light_energy = 0.3
-omni_range = 6.5
+light_energy = 0.2
+omni_range = 9.75
+
+[node name="Emergency_6" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 2.7, 0)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.32
+omni_range = 9.75
 
 [node name="Power_0" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2.8, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.25, 2.8, -7.5)
 visible = false
 light_color = Color(1, 0.85, 0.6, 1)
-light_energy = 1.3
+light_energy = 1.4
 shadow_enabled = true
-omni_range = 7.5
+omni_range = 11.25
 
 [node name="Power_1" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 2.8, -7.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.75, 2.8, -11.25)
 visible = false
 light_color = Color(1, 0.85, 0.6, 1)
-light_energy = 1.1
+light_energy = 1.2
 shadow_enabled = true
-omni_range = 7.5
+omni_range = 11.25
 
 [node name="Power_2" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.8, 0)
 visible = false
 light_color = Color(1, 0.85, 0.6, 1)
-light_energy = 0.6
+light_energy = 0.7
 shadow_enabled = true
-omni_range = 7.5
+omni_range = 11.25
 
 [node name="Moonlight" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 3, 0)
 light_color = Color(0.45, 0.55, 0.85, 1)
 light_energy = 0.7
-omni_range = 9.0
+omni_range = 10.0
 
 [node name="ConsoleScreen" type="MeshInstance3D" parent="Lights" groups=["power_screens"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.3, -9.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.3, -14.3)
 visible = false
 mesh = SubResource("Mesh_Screen")
 
 [node name="RoomLabels" type="Node3D" parent="."]
 
 [node name="Label_SignalRoom" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.75, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.75, -8.55)
 billboard = 1
 modulate = Color(0.85, 0.8, 0.7, 0.22)
 pixel_size = 0.003
@@ -305,7 +316,7 @@ font_size = 40
 text = "ทางเดิน"
 
 [node name="Label_Storage" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.75, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.75, 7.05)
 billboard = 1
 modulate = Color(0.85, 0.8, 0.7, 0.22)
 pixel_size = 0.003
@@ -314,7 +325,7 @@ font_size = 40
 text = "ห้องเก็บของ"
 
 [node name="Label_ChiefOffice" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.75, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.75, -8.55)
 billboard = 1
 modulate = Color(0.85, 0.8, 0.7, 0.22)
 pixel_size = 0.003
@@ -323,7 +334,7 @@ font_size = 40
 text = "ห้องหัวหน้าสถานี"
 
 [node name="Label_Lobby" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 2.75, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.65, 2.75, 0)
 billboard = 1
 modulate = Color(0.85, 0.8, 0.7, 0.22)
 pixel_size = 0.003
@@ -332,45 +343,54 @@ font_size = 40
 text = "โถงประตูทางออก"
 
 [node name="PlayerSpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.05, -6.75)
 
 [node name="EnemySpawn" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.05, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.25, 0.05, 3)
 
 [node name="DebugExitPoint" type="Marker3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 16.3, 0.05, 0)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 24.45, 0.05, 0)
 
 [node name="Waypoints" type="Node3D" parent="."]
 
-[node name="WP0" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -5.5)
+[node name="WP_Signal_A" type="Marker3D" parent="Waypoints" groups=["wp_signal_room"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.05, -8.25)
 
-[node name="WP1" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.05, 0)
+[node name="WP_Signal_B" type="Marker3D" parent="Waypoints" groups=["wp_signal_room"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.05, -12)
 
-[node name="WP2" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.05, 4.5)
+[node name="WP_Corridor_W" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0.05, 0)
 
-[node name="WP3" type="Marker3D" parent="Waypoints"]
+[node name="WP_Corridor_M" type="Marker3D" parent="Waypoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 
-[node name="WP4" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.05, -5.5)
+[node name="WP_Corridor_E" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.05, 0)
 
-[node name="WP5" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.05, 0)
+[node name="WP_Storage_A" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.05, 6.75)
 
-[node name="WP6" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.05, 0)
+[node name="WP_Storage_B" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.75, 0.05, 10.2)
 
-[node name="WP7" type="Marker3D" parent="Waypoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.05, -1.5)
+[node name="WP_Chief_A" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.05, -8.25)
+
+[node name="WP_Chief_B" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.05, -12)
+
+[node name="WP_Lobby_A" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 0.05, 0)
+
+[node name="WP_Lobby_B" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.05, -2.25)
 
 [node name="Player" parent="." instance=ExtResource("player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -4.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.05, -6.75)
 
 [node name="Enemy" parent="." instance=ExtResource("enemy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.05, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 23.25, 0.05, 3)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 script = ExtResource("hud")
@@ -378,7 +398,7 @@ script = ExtResource("hud")
 [node name="Interactables" type="Node3D" parent="."]
 
 [node name="Fuse" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.3, 0.86, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.95, 0.86, -10.5)
 script = ExtResource("pickup")
 box_size = Vector3(0.12, 0.12, 0.32)
 box_color = Color(0.95, 0.6, 0.15, 1)
@@ -388,7 +408,7 @@ kind = 1
 item_id = "fuse"
 
 [node name="FuseBox" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.88, 1.4, 4.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.88, 1.4, 6.6)
 script = ExtResource("fusebox")
 box_size = Vector3(0.2, 0.8, 0.6)
 box_color = Color(0.35, 0.37, 0.4, 1)
@@ -396,7 +416,7 @@ glow = 0
 solid = true
 
 [node name="PowerSwitch" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.88, 1.4, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.88, 1.4, -4.5)
 script = ExtResource("switch")
 box_size = Vector3(0.2, 0.5, 0.35)
 box_color = Color(0.6, 0.12, 0.08, 1)
@@ -404,7 +424,7 @@ glow = 0.3
 solid = true
 
 [node name="Doc0_EkLogbook" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 1.03, -9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.4, 1.03, -13.85)
 script = ExtResource("pickup")
 box_size = Vector3(0.32, 0.04, 0.24)
 box_color = Color(0.85, 0.8, 0.65, 1)
@@ -415,7 +435,7 @@ doc_index = 0
 item_id = "doc0"
 
 [node name="Doc1_NiphonLog" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.03, 6.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.3, 0.03, 9.9)
 script = ExtResource("pickup")
 box_size = Vector3(0.3, 0.03, 0.22)
 box_color = Color(0.85, 0.8, 0.65, 1)
@@ -426,7 +446,7 @@ doc_index = 1
 item_id = "doc1"
 
 [node name="Doc2_EkTape" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 0.53, 2.6)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.3, 0.53, 3.9)
 script = ExtResource("pickup")
 box_size = Vector3(0.12, 0.03, 0.08)
 box_color = Color(0.15, 0.13, 0.12, 1)
@@ -437,7 +457,7 @@ doc_index = 2
 item_id = "doc2"
 
 [node name="Doc3_ChiefTape" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8, 0.03, -2.4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.2, 0.03, -3.25)
 script = ExtResource("pickup")
 box_size = Vector3(0.12, 0.03, 0.08)
 box_color = Color(0.15, 0.13, 0.12, 1)
@@ -448,7 +468,7 @@ doc_index = 3
 item_id = "doc3"
 
 [node name="TapePlayer" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.7, 0.92, -7.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.05, 0.92, -10.65)
 script = ExtResource("tape")
 box_size = Vector3(0.45, 0.24, 0.3)
 box_color = Color(0.12, 0.12, 0.13, 1)
@@ -456,7 +476,7 @@ glow = 0.1
 solid = true
 
 [node name="Keypad" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.88, 1.35, 1.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26.88, 1.35, 1.95)
 script = ExtResource("keypad")
 box_size = Vector3(0.2, 0.35, 0.25)
 box_color = Color(0.15, 0.5, 0.2, 1)
@@ -465,7 +485,7 @@ solid = true
 door_path = NodePath("../../ExitDoor")
 
 [node name="Battery_0" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.18, -3.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.75, 1.18, -5.3)
 script = ExtResource("pickup")
 box_size = Vector3(0.1, 0.15, 0.1)
 box_color = Color(0.95, 0.75, 0.15, 1)
@@ -475,7 +495,7 @@ kind = 0
 item_id = "battery0"
 
 [node name="Battery_1" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.88, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.88, 4.5)
 script = ExtResource("pickup")
 box_size = Vector3(0.1, 0.15, 0.1)
 box_color = Color(0.95, 0.75, 0.15, 1)
@@ -485,7 +505,7 @@ kind = 0
 item_id = "battery1"
 
 [node name="Battery_2" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.08, 1.1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9, 0.08, 1.85)
 script = ExtResource("pickup")
 box_size = Vector3(0.1, 0.15, 0.1)
 box_color = Color(0.95, 0.75, 0.15, 1)
@@ -495,7 +515,7 @@ kind = 0
 item_id = "battery2"
 
 [node name="Battery_3" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 0.08, -9.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.9, 0.08, -14.15)
 script = ExtResource("pickup")
 box_size = Vector3(0.1, 0.15, 0.1)
 box_color = Color(0.95, 0.75, 0.15, 1)
@@ -505,7 +525,7 @@ kind = 0
 item_id = "battery3"
 
 [node name="Hide_CorridorLocker" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -11.6, 1.05, 0.7)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -17.6, 1.05, 1.45)
 script = ExtResource("hide")
 box_size = Vector3(1, 2.1, 0.7)
 box_color = Color(0.2, 0.3, 0.27, 1)
@@ -513,7 +533,7 @@ glow = 0
 solid = true
 
 [node name="Hide_SignalDesk" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.6, 0.4, -4.6)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -6.6, 0.4, -6.9)
 script = ExtResource("hide")
 box_size = Vector3(1.6, 0.8, 0.9)
 box_color = Color(0.3, 0.22, 0.15, 1)
@@ -523,7 +543,7 @@ view_offset = Vector3(0, 0.45, 0.1)
 is_under_desk = true
 
 [node name="Hide_StorageLocker" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 1.6, 1.05, 6)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 2.6, 1.05, 9)
 script = ExtResource("hide")
 box_size = Vector3(1, 2.1, 0.7)
 box_color = Color(0.2, 0.3, 0.27, 1)
@@ -531,7 +551,7 @@ glow = 0
 solid = true
 
 [node name="Hide_ChiefWardrobe" type="StaticBody3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 1.1, -9.25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.8, 1.1, -14.1)
 script = ExtResource("hide")
 box_size = Vector3(1.2, 2.2, 0.8)
 box_color = Color(0.25, 0.17, 0.1, 1)
@@ -539,33 +559,73 @@ glow = 0
 solid = true
 view_offset = Vector3(0, 1.5, 0.25)
 
+[node name="Hide_SignalLocker" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -17.6, 1.05, -14.05)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_CorridorLocker_E" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 4.5, 1.05, 1.9)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_StorageLocker_W" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.6, 1.05, 3.05)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_ChiefCabinet" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 17.6, 1.05, -11.25)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_LobbyLocker" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 18.7, 1.05, 5.4)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
 [node name="FrequencySources" type="Node3D" parent="."]
 
 [node name="Source_0" type="Marker3D" parent="FrequencySources"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.2, -8.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.2, -12.75)
 script = ExtResource("source")
 freq_index = 0
-range_m = 7
+range_m = 10.5
 
 [node name="Source_1" type="Marker3D" parent="FrequencySources"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 1.5, 0)
 script = ExtResource("source")
 freq_index = 1
-range_m = 6
+range_m = 9
 
 [node name="Source_2" type="Marker3D" parent="FrequencySources"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.2, 6.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.2, 9.75)
 script = ExtResource("source")
 freq_index = 2
-range_m = 6
+range_m = 9
 
 [node name="ExitDoor" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.1, 0, 0)
 script = ExtResource("door")
-size = Vector3(0.15, 2.3, 1.6)
+size = Vector3(0.15, 2.6, 2.2)
 
 [node name="ExitTrigger" type="Area3D" parent="ExitDoor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 1.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 1.3, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="ExitDoor/ExitTrigger"]
 shape = SubResource("Shape_Exit")
