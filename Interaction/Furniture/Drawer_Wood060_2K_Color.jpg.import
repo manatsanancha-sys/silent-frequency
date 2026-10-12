@@ -4,8 +4,9 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cra1etnshubul"
 path.s3tc="res://.godot/imported/Drawer_Wood060_2K_Color.jpg-1662fcbc0160fa2fbb7399def6bdf740.s3tc.ctex"
+path.etc2="res://.godot/imported/Drawer_Wood060_2K_Color.jpg-1662fcbc0160fa2fbb7399def6bdf740.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={}
@@ -13,7 +14,7 @@ generator_parameters={}
 [deps]
 
 source_file="res://Interaction/Furniture/Drawer_Wood060_2K_Color.jpg"
-dest_files=["res://.godot/imported/Drawer_Wood060_2K_Color.jpg-1662fcbc0160fa2fbb7399def6bdf740.s3tc.ctex"]
+dest_files=["res://.godot/imported/Drawer_Wood060_2K_Color.jpg-1662fcbc0160fa2fbb7399def6bdf740.s3tc.ctex", "res://.godot/imported/Drawer_Wood060_2K_Color.jpg-1662fcbc0160fa2fbb7399def6bdf740.etc2.ctex"]
 
 [params]
 
