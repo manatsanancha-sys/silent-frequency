@@ -2,7 +2,7 @@ extends Interactable
 ## เครื่องเล่นเทปในห้องหัวหน้าสถานี (ปริศนาที่ 3) — เปิดเทปที่เก็บมาทีละม้วน
 ## เสียงเทปดังพอให้ศัตรูได้ยิน (NoiseBus)
 
-@export var playback_noise_radius := 9.0
+@export var playback_noise_radius := 6.5  # เดิม 9
 
 var _playing_index := -1
 var _timer := 0.0

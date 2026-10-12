@@ -119,7 +119,7 @@ func _spawn_enemy(announce: bool):
 			if d > best:
 				best = d
 				pos = w.global_position
-	enemy.activate(pos)
+	enemy.activate(pos, announce)
 	if announce:
 		Audio.play_sfx_3d("door_open", spawn.global_position, 0.0, 0.7)
 

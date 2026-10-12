@@ -3,7 +3,7 @@ extends Interactable
 ## ใส่ผิด → เสียงเตือนดัง ศัตรูได้ยิน (NoiseBus)
 
 @export var door_path: NodePath
-@export var wrong_code_noise_radius := 16.0
+@export var wrong_code_noise_radius := 12.0  # เดิม 16
 
 
 func get_prompt(_player) -> String:
