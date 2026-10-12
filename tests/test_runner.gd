@@ -42,6 +42,7 @@ func test_menu_no_save():
 	check(cont != null and cont.disabled, "Continue disabled when no save")
 	var quit := _find_button("ออกจากเกม")
 	check(quit != null and quit.visible == not OS.has_feature("web"), "Quit button visible on desktop")
+	check(_count_vhs(get_tree().current_scene) == 0, "main menu has no VHS overlay (UI stays sharp)")
 
 
 func test_full_win_path():
@@ -53,6 +54,9 @@ func test_full_win_path():
 	var enemy: EnemyAI = st.enemy
 	check(GameState.has_save(), "initial checkpoint saved on new game")
 	check(not enemy.active, "enemy dormant before power")
+	var vhs: CanvasLayer = st.get_node_or_null("VhsLayer")
+	check(vhs != null and vhs.layer < st.hud.layer and vhs.layer < PauseMenu.layer, "VHS layer below HUD and pause menu")
+	check(_count_vhs(st.hud) == 0, "HUD itself has no VHS overlay")
 	_check_navmesh(st)
 	GameState.debug_enemy_disabled = true
 
@@ -143,6 +147,7 @@ func test_game_over_and_retry():
 	player.teleport(enemy.global_position + Vector3(0.5, 0, 0.5), 0.0)
 	await _wait_scene(GAME_OVER)
 	check(get_tree().current_scene.scene_file_path == GAME_OVER, "caught → Game Over screen")
+	check(_count_vhs(get_tree().current_scene) == 0, "game over screen has no VHS overlay")
 	check(GameState.game_over_reason == "caught", "reason = caught")
 	GameState.retry_from_checkpoint()
 	await _wait_scene(LEVEL)
@@ -265,6 +270,15 @@ func test_enemy_ai():
 
 
 # ------------------------------------------------------------------ helpers
+
+func _count_vhs(root: Node) -> int:
+	var n := 0
+	for c in root.find_children("*", "CanvasItem", true, false):
+		var m = c.material
+		if m is ShaderMaterial and m.shader and m.shader.resource_path.ends_with("vhs.gdshader"):
+			n += 1
+	return n
+
 
 func _check_navmesh(st):
 	var region: NavigationRegion3D = st.nav_region
