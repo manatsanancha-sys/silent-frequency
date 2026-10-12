@@ -1,354 +1,566 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=22 format=3]
 
-[ext_resource type="PackedScene" path="res://DemoPlayer/demo_player.tscn" id="1_player"]
-[ext_resource type="PackedScene" path="res://Game/Enemy/enemy.tscn" id="2_enemy"]
-[ext_resource type="Script" path="res://Game/Systems/FrequencyFinder/frequency_finder.gd" id="3_finder"]
-[ext_resource type="Script" path="res://Game/Systems/FrequencyFinder/frequency_source.gd" id="4_source"]
-[ext_resource type="Script" path="res://Game/Systems/Hiding/hiding_spot.gd" id="5_hide"]
-[ext_resource type="PackedScene" path="res://Interaction/Items/CollectibleItem.tscn" id="6_collect"]
-[ext_resource type="Script" path="res://Interaction/Items/PowerCell/power_cell.gd" id="7_cell"]
-[ext_resource type="Script" path="res://Inventory/ItemResource.gd" id="8_itemres"]
-[ext_resource type="Texture2D" path="res://Interaction/Items/PowerCell/power_cell.png" id="9_celltex"]
+[ext_resource type="PackedScene" path="res://Game/Player/player.tscn" id="player"]
+[ext_resource type="PackedScene" path="res://Game/Enemy/enemy.tscn" id="enemy"]
+[ext_resource type="Script" path="res://Game/Level/station.gd" id="station"]
+[ext_resource type="Script" path="res://Game/UI/HUD/hud.gd" id="hud"]
+[ext_resource type="Script" path="res://Game/Interactables/pickup.gd" id="pickup"]
+[ext_resource type="Script" path="res://Game/Interactables/fuse_box.gd" id="fusebox"]
+[ext_resource type="Script" path="res://Game/Interactables/power_switch.gd" id="switch"]
+[ext_resource type="Script" path="res://Game/Interactables/tape_player.gd" id="tape"]
+[ext_resource type="Script" path="res://Game/Interactables/keypad.gd" id="keypad"]
+[ext_resource type="Script" path="res://Game/Interactables/exit_door.gd" id="door"]
+[ext_resource type="Script" path="res://Game/Interactables/hiding_spot.gd" id="hide"]
+[ext_resource type="Script" path="res://Game/Systems/FrequencyFinder/frequency_source.gd" id="source"]
+[ext_resource type="FontFile" path="res://assets/fonts/Sarabun-Regular.ttf" id="font"]
+[ext_resource type="NavigationMesh" path="res://levels/radio_station_navmesh.tres" id="navmesh"]
 
 [sub_resource type="Environment" id="Env"]
 background_mode = 1
 background_color = Color(0, 0, 0, 1)
 ambient_light_source = 2
-ambient_light_color = Color(0.35, 0.4, 0.5, 1)
-ambient_light_energy = 0.08
+ambient_light_color = Color(0.3, 0.33, 0.42, 1)
+ambient_light_energy = 0.06
 tonemap_mode = 2
 fog_enabled = true
-fog_light_color = Color(0.05, 0.06, 0.08, 1)
-fog_density = 0.03
+fog_light_color = Color(0.03, 0.035, 0.05, 1)
+fog_density = 0.045
 
 [sub_resource type="StandardMaterial3D" id="Mat_Wall"]
-albedo_color = Color(0.55, 0.55, 0.55, 1)
+albedo_color = Color(0.42, 0.42, 0.4, 1)
+roughness = 0.95
+
+[sub_resource type="StandardMaterial3D" id="Mat_Floor"]
+albedo_color = Color(0.22, 0.21, 0.2, 1)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Prop"]
-albedo_color = Color(0.3, 0.32, 0.35, 1)
+albedo_color = Color(0.28, 0.25, 0.22, 1)
 
-[sub_resource type="StandardMaterial3D" id="Mat_Locker"]
-albedo_color = Color(0.2, 0.35, 0.3, 1)
-
-[sub_resource type="BoxMesh" id="Mesh_Locker"]
-material = SubResource("Mat_Locker")
-size = Vector3(1, 2.1, 0.7)
-
-[sub_resource type="BoxShape3D" id="Shape_Locker"]
-size = Vector3(1, 2.1, 0.7)
-
-[sub_resource type="StandardMaterial3D" id="Mat_Battery"]
-albedo_color = Color(0.9, 0.75, 0.1, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_Screen"]
+albedo_color = Color(0.1, 0.4, 0.2, 1)
 emission_enabled = true
-emission = Color(0.4, 0.3, 0, 1)
+emission = Color(0.2, 0.9, 0.4, 1)
+emission_energy_multiplier = 1.4
 
-[sub_resource type="BoxMesh" id="Mesh_Battery"]
-material = SubResource("Mat_Battery")
-size = Vector3(0.15, 0.3, 0.15)
+[sub_resource type="BoxMesh" id="Mesh_Screen"]
+material = SubResource("Mat_Screen")
+size = Vector3(2.2, 0.45, 0.04)
 
-[sub_resource type="BoxShape3D" id="Shape_Battery"]
-size = Vector3(0.3, 0.4, 0.3)
-
-[sub_resource type="Resource" id="Item_PowerCell"]
-script = ExtResource("8_itemres")
-item_name = "Power Cell"
-texture = ExtResource("9_celltex")
-quantity = 1
-description = "แบตเตอรี่สำรองสำหรับไฟฉาย กด Use เพื่อชาร์จ"
-
-[sub_resource type="SphereMesh" id="Mesh_Source"]
-radius = 0.15
-height = 0.3
+[sub_resource type="BoxShape3D" id="Shape_Exit"]
+size = Vector3(1.2, 2.4, 3.0)
 
 [node name="RadioStation" type="Node3D"]
+script = ExtResource("station")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Env")
 
-[node name="Building" type="CSGCombiner3D" parent="."]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
+navigation_mesh = ExtResource("navmesh")
+
+[node name="Building" type="CSGCombiner3D" parent="NavigationRegion3D"]
 use_collision = true
 
-[node name="Lobby_Shell" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.5, 0)
-size = Vector3(6.2, 3.4, 8.4)
+[node name="SignalRoom_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -5.7)
+size = Vector3(8.4, 3.4, 8.4)
 material = SubResource("Mat_Wall")
 
-[node name="Corridor_Shell" type="CSGBox3D" parent="Building"]
+[node name="Corridor_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 size = Vector3(24.4, 3.4, 3.4)
 material = SubResource("Mat_Wall")
 
-[node name="SignalRoom_Shell" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -5.7)
-size = Vector3(8.4, 3.4, 8.4)
-material = SubResource("Mat_Wall")
-
-[node name="ChiefOffice_Shell" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
-size = Vector3(8.4, 3.4, 8.4)
-material = SubResource("Mat_Wall")
-
-[node name="Storage_Shell" type="CSGBox3D" parent="Building"]
+[node name="Storage_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.5, 4.7)
 size = Vector3(6.4, 3.4, 6.4)
 material = SubResource("Mat_Wall")
 
-[node name="Lobby_Interior" type="CSGBox3D" parent="Building"]
+[node name="ChiefOffice_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
+size = Vector3(8.4, 3.4, 8.4)
+material = SubResource("Mat_Wall")
+
+[node name="Lobby_Shell" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.5, 0)
-operation = 2
-size = Vector3(5.8, 3, 8)
+size = Vector3(6.2, 3.4, 8.4)
+material = SubResource("Mat_Wall")
 
-[node name="Corridor_Interior" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-operation = 2
-size = Vector3(24, 3, 3)
-
-[node name="SignalRoom_Interior" type="CSGBox3D" parent="Building"]
+[node name="SignalRoom_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.5, -5.7)
 operation = 2
 size = Vector3(8, 3, 8)
 
-[node name="ChiefOffice_Interior" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
+[node name="Corridor_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 operation = 2
-size = Vector3(8, 3, 8)
+size = Vector3(24, 3, 3)
 
-[node name="Storage_Interior" type="CSGBox3D" parent="Building"]
+[node name="Storage_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.5, 4.7)
 operation = 2
 size = Vector3(6, 3, 6)
 
-[node name="Door_Lobby" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 1.1, 0)
+[node name="ChiefOffice_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.5, -5.7)
 operation = 2
-size = Vector3(0.6, 2.2, 1.2)
+size = Vector3(8, 3, 8)
 
-[node name="Door_Signal" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.1, -1.6)
+[node name="Lobby_Interior" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 1.5, 0)
 operation = 2
-size = Vector3(1.2, 2.2, 0.6)
+size = Vector3(5.8, 3, 8)
 
-[node name="Door_Chief" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.1, -1.6)
+[node name="Door_Lobby" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.1, 1.15, 0)
 operation = 2
-size = Vector3(1.2, 2.2, 0.6)
+size = Vector3(0.6, 2.3, 1.6)
 
-[node name="Door_Storage" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.1, 1.6)
+[node name="Door_Signal" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.15, -1.6)
 operation = 2
-size = Vector3(1.2, 2.2, 0.6)
+size = Vector3(1.6, 2.3, 0.6)
 
-[node name="RadioConsole" type="CSGBox3D" parent="Building"]
+[node name="Door_Chief" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.15, -1.6)
+operation = 2
+size = Vector3(1.6, 2.3, 0.6)
+
+[node name="Door_Storage" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.15, 1.6)
+operation = 2
+size = Vector3(1.6, 2.3, 0.6)
+
+[node name="Door_Exit" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1, 1.15, 0)
+operation = 2
+size = Vector3(0.6, 2.3, 1.6)
+
+[node name="SignalRoom_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.005, -5.7)
+size = Vector3(8, 0.01, 8)
+material = SubResource("Mat_Floor")
+
+[node name="Corridor_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+size = Vector3(24, 0.01, 3)
+material = SubResource("Mat_Floor")
+
+[node name="Storage_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.005, 4.7)
+size = Vector3(6, 0.01, 6)
+material = SubResource("Mat_Floor")
+
+[node name="ChiefOffice_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.005, -5.7)
+size = Vector3(8, 0.01, 8)
+material = SubResource("Mat_Floor")
+
+[node name="Lobby_Floor" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 0.005, 0)
+size = Vector3(5.8, 0.01, 8)
+material = SubResource("Mat_Floor")
+
+[node name="RadioConsole" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.5, -9)
 size = Vector3(5, 1, 1)
 material = SubResource("Mat_Prop")
 
-[node name="RadioRack" type="CSGBox3D" parent="Building"]
+[node name="RadioRack" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.4, 1, -6)
 size = Vector3(1, 2, 3)
 material = SubResource("Mat_Prop")
 
-[node name="ChiefDesk" type="CSGBox3D" parent="Building"]
+[node name="ChiefDesk" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.4, -7)
 size = Vector3(2.4, 0.8, 1.2)
 material = SubResource("Mat_Prop")
 
-[node name="ChiefShelf" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1, -4)
+[node name="ChiefShelf" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.5, 1, -4.5)
 size = Vector3(0.8, 2, 2.5)
 material = SubResource("Mat_Prop")
 
-[node name="Shelf_A" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 1, 5)
-size = Vector3(1, 2, 4)
+[node name="Shelf_A" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.4, 1, 4.6)
+size = Vector3(1, 2, 3.6)
 material = SubResource("Mat_Prop")
 
-[node name="Shelf_B" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7.1)
-size = Vector3(3, 2, 1)
+[node name="Shelf_B" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1, 7.1)
+size = Vector3(2.6, 2, 1)
 material = SubResource("Mat_Prop")
 
-[node name="Crate_1" type="CSGBox3D" parent="Building"]
+[node name="Crate" type="CSGBox3D" parent="NavigationRegion3D/Building"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.4, 3)
 size = Vector3(0.8, 0.8, 0.8)
 material = SubResource("Mat_Prop")
 
-[node name="LobbyBench" type="CSGBox3D" parent="Building"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 0.25, 2.5)
-size = Vector3(1, 0.5, 2.5)
+[node name="LobbyBench" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 0.25, 2.8)
+size = Vector3(1, 0.5, 2)
+material = SubResource("Mat_Prop")
+
+[node name="LobbyCounter" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 0.55, -3.3)
+size = Vector3(3, 1.1, 0.8)
+material = SubResource("Mat_Prop")
+
+[node name="Porch" type="CSGBox3D" parent="NavigationRegion3D/Building"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21, -0.1, 0)
+size = Vector3(5.6, 0.2, 6)
 material = SubResource("Mat_Prop")
 
 [node name="Lights" type="Node3D" parent="."]
 
-[node name="Light_Lobby" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.7, 0)
-light_color = Color(1, 0.8, 0.55, 1)
-light_energy = 1
-shadow_enabled = true
-omni_range = 6.0
-
-[node name="Light_Corridor" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.7, 0)
-light_color = Color(1, 0.8, 0.55, 1)
-light_energy = 0.4
-shadow_enabled = true
-omni_range = 6.0
-
-[node name="Light_Signal" type="OmniLight3D" parent="Lights"]
+[node name="Emergency_0" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.7, -5.7)
-light_color = Color(1, 0.8, 0.55, 1)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.3
+omni_range = 6.5
+
+[node name="Emergency_1" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.7, 0)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.22
+omni_range = 6.5
+
+[node name="Emergency_2" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.7, 0)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.22
+omni_range = 6.5
+
+[node name="Emergency_3" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 4.7)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.18
+omni_range = 6.5
+
+[node name="Emergency_4" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.7, -5.7)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.18
+omni_range = 6.5
+
+[node name="Emergency_5" type="OmniLight3D" parent="Lights" groups=["flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.7, 0)
+light_color = Color(0.85, 0.18, 0.1, 1)
+light_energy = 0.3
+omni_range = 6.5
+
+[node name="Power_0" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 2.8, -5)
+visible = false
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.3
+shadow_enabled = true
+omni_range = 7.5
+
+[node name="Power_1" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 2.8, -7.5)
+visible = false
+light_color = Color(1, 0.85, 0.6, 1)
+light_energy = 1.1
+shadow_enabled = true
+omni_range = 7.5
+
+[node name="Power_2" type="OmniLight3D" parent="Lights" groups=["power_lights", "flicker_lights"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.8, 0)
+visible = false
+light_color = Color(1, 0.85, 0.6, 1)
 light_energy = 0.6
 shadow_enabled = true
-omni_range = 6.0
+omni_range = 7.5
 
-[node name="Light_Chief" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.7, -5.7)
-light_color = Color(1, 0.8, 0.55, 1)
-light_energy = 0.3
-shadow_enabled = true
-omni_range = 6.0
+[node name="Moonlight" type="OmniLight3D" parent="Lights"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 3, 0)
+light_color = Color(0.45, 0.55, 0.85, 1)
+light_energy = 0.7
+omni_range = 9.0
 
-[node name="Light_Storage" type="OmniLight3D" parent="Lights"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.7, 4.7)
-light_color = Color(1, 0.8, 0.55, 1)
-light_energy = 0.2
-shadow_enabled = true
-omni_range = 6.0
+[node name="ConsoleScreen" type="MeshInstance3D" parent="Lights" groups=["power_screens"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.3, -9.45)
+visible = false
+mesh = SubResource("Mesh_Screen")
 
 [node name="RoomLabels" type="Node3D" parent="."]
 
-[node name="Label_Lobby" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 2.4, 0)
+[node name="Label_SignalRoom" type="Label3D" parent="RoomLabels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.55, -5.7)
 billboard = 1
-modulate = Color(1, 1, 1, 0.35)
-font_size = 48
-text = "Lobby
-ห้องโถงทางเข้า"
+modulate = Color(0.85, 0.8, 0.7, 0.3)
+font = ExtResource("font")
+font_size = 40
+text = "ห้องรับสัญญาณ"
 
 [node name="Label_Corridor" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
 billboard = 1
-modulate = Color(1, 1, 1, 0.35)
-font_size = 48
-text = "Corridor
-ทางเดิน"
-
-[node name="Label_SignalRoom" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.4, -5.7)
-billboard = 1
-modulate = Color(1, 1, 1, 0.35)
-font_size = 48
-text = "Signal Room
-ห้องรับสัญญาณ"
-
-[node name="Label_ChiefOffice" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.4, -5.7)
-billboard = 1
-modulate = Color(1, 1, 1, 0.35)
-font_size = 48
-text = "Chief's Office
-ห้องหัวหน้าสถานี"
+modulate = Color(0.85, 0.8, 0.7, 0.3)
+font = ExtResource("font")
+font_size = 40
+text = "ทางเดิน"
 
 [node name="Label_Storage" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.4, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.55, 4.7)
 billboard = 1
-modulate = Color(1, 1, 1, 0.35)
-font_size = 48
-text = "Storage
-ห้องเก็บของ"
+modulate = Color(0.85, 0.8, 0.7, 0.3)
+font = ExtResource("font")
+font_size = 40
+text = "ห้องเก็บของ"
 
-[node name="DemoPlayer" parent="." groups=["player"] instance=ExtResource("1_player")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 16, 1.1, 0)
+[node name="Label_ChiefOffice" type="Label3D" parent="RoomLabels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.55, -5.7)
+billboard = 1
+modulate = Color(0.85, 0.8, 0.7, 0.3)
+font = ExtResource("font")
+font_size = 40
+text = "ห้องหัวหน้าสถานี"
 
-[node name="FrequencyFinder" type="Node" parent="DemoPlayer"]
-script = ExtResource("3_finder")
+[node name="Label_Lobby" type="Label3D" parent="RoomLabels"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 2.55, 0)
+billboard = 1
+modulate = Color(0.85, 0.8, 0.7, 0.3)
+font = ExtResource("font")
+font_size = 40
+text = "โถงประตูทางออก"
 
-[node name="Gameplay" type="Node3D" parent="."]
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -4.5)
 
-[node name="FrequencySource_01" type="Marker3D" parent="Gameplay"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.2, -8.8)
-script = ExtResource("4_source")
-frequency_mhz = 98.6
-message = "...สถานีนี้... ยังมีใครอยู่ไหม..."
+[node name="EnemySpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.05, 2)
 
-[node name="DebugMesh" type="MeshInstance3D" parent="Gameplay/FrequencySource_01"]
-mesh = SubResource("Mesh_Source")
+[node name="DebugExitPoint" type="Marker3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 16.3, 0.05, 0)
 
-[node name="HidingSpot_01" type="StaticBody3D" parent="Gameplay"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4, 1.05, 5)
-collision_layer = 9
-script = ExtResource("5_hide")
+[node name="Waypoints" type="Node3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Gameplay/HidingSpot_01"]
-shape = SubResource("Shape_Locker")
+[node name="WP0" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -5.5)
 
-[node name="Mesh" type="MeshInstance3D" parent="Gameplay/HidingSpot_01"]
-mesh = SubResource("Mesh_Locker")
+[node name="WP1" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0.05, 0)
 
-[node name="HidingSpot_02" type="StaticBody3D" parent="Gameplay"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.05, -9.2)
-collision_layer = 9
-script = ExtResource("5_hide")
+[node name="WP2" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.05, 4.5)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Gameplay/HidingSpot_02"]
-shape = SubResource("Shape_Locker")
+[node name="WP3" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Gameplay/HidingSpot_02"]
-mesh = SubResource("Mesh_Locker")
+[node name="WP4" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.05, -5.5)
 
-[node name="Battery_01" parent="Gameplay" instance=ExtResource("6_collect")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.15, -3)
-script = ExtResource("7_cell")
-item = SubResource("Item_PowerCell")
+[node name="WP5" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.05, 0)
 
-[node name="CollisionShape3D" parent="Gameplay/Battery_01"]
-shape = SubResource("Shape_Battery")
+[node name="WP6" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.05, 0)
 
-[node name="Mesh" type="MeshInstance3D" parent="Gameplay/Battery_01"]
-mesh = SubResource("Mesh_Battery")
+[node name="WP7" type="Marker3D" parent="Waypoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 0.05, -1.5)
 
-[node name="Battery_02" parent="Gameplay" instance=ExtResource("6_collect")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.95, 3)
-script = ExtResource("7_cell")
-item = SubResource("Item_PowerCell")
+[node name="Player" parent="." instance=ExtResource("player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.05, -4.5)
 
-[node name="CollisionShape3D" parent="Gameplay/Battery_02"]
-shape = SubResource("Shape_Battery")
+[node name="Enemy" parent="." instance=ExtResource("enemy")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.5, 0.05, 2)
 
-[node name="Mesh" type="MeshInstance3D" parent="Gameplay/Battery_02"]
-mesh = SubResource("Mesh_Battery")
+[node name="HUD" type="CanvasLayer" parent="."]
+script = ExtResource("hud")
 
-[node name="Battery_03" parent="Gameplay" instance=ExtResource("6_collect")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.15, -9)
-script = ExtResource("7_cell")
-item = SubResource("Item_PowerCell")
+[node name="Interactables" type="Node3D" parent="."]
 
-[node name="CollisionShape3D" parent="Gameplay/Battery_03"]
-shape = SubResource("Shape_Battery")
+[node name="Fuse" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.3, 0.86, -7)
+script = ExtResource("pickup")
+box_size = Vector3(0.12, 0.12, 0.32)
+box_color = Color(0.95, 0.6, 0.15, 1)
+glow = 0.6
+solid = false
+kind = 1
+item_id = "fuse"
 
-[node name="Mesh" type="MeshInstance3D" parent="Gameplay/Battery_03"]
-mesh = SubResource("Mesh_Battery")
+[node name="FuseBox" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.88, 1.4, 4.4)
+script = ExtResource("fusebox")
+box_size = Vector3(0.2, 0.8, 0.6)
+box_color = Color(0.35, 0.37, 0.4, 1)
+glow = 0
+solid = true
 
-[node name="PatrolPoints" type="Node3D" parent="Gameplay"]
+[node name="PowerSwitch" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.88, 1.4, -3)
+script = ExtResource("switch")
+box_size = Vector3(0.2, 0.5, 0.35)
+box_color = Color(0.6, 0.12, 0.08, 1)
+glow = 0.3
+solid = true
 
-[node name="P1" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
+[node name="Doc0_EkLogbook" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.6, 1.03, -9)
+script = ExtResource("pickup")
+box_size = Vector3(0.32, 0.04, 0.24)
+box_color = Color(0.85, 0.8, 0.65, 1)
+glow = 0.25
+solid = false
+kind = 2
+doc_index = 0
+item_id = "doc0"
 
-[node name="P2" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, -6)
+[node name="Doc1_NiphonLog" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0.03, 6.6)
+script = ExtResource("pickup")
+box_size = Vector3(0.3, 0.03, 0.22)
+box_color = Color(0.85, 0.8, 0.65, 1)
+glow = 0.25
+solid = false
+kind = 2
+doc_index = 1
+item_id = "doc1"
 
-[node name="P3" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 0)
+[node name="Doc2_EkTape" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.3, 0.53, 2.6)
+script = ExtResource("pickup")
+box_size = Vector3(0.12, 0.03, 0.08)
+box_color = Color(0.15, 0.13, 0.12, 1)
+glow = 0.5
+solid = false
+kind = 2
+doc_index = 2
+item_id = "doc2"
 
-[node name="P4" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+[node name="Doc3_ChiefTape" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.8, 0.03, -2.4)
+script = ExtResource("pickup")
+box_size = Vector3(0.12, 0.03, 0.08)
+box_color = Color(0.15, 0.13, 0.12, 1)
+glow = 0.5
+solid = false
+kind = 2
+doc_index = 3
+item_id = "doc3"
 
-[node name="P5" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, -6)
+[node name="TapePlayer" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.7, 0.92, -7.1)
+script = ExtResource("tape")
+box_size = Vector3(0.45, 0.24, 0.3)
+box_color = Color(0.12, 0.12, 0.13, 1)
+glow = 0.1
+solid = true
 
-[node name="P6" type="Marker3D" parent="Gameplay/PatrolPoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0, 0)
+[node name="Keypad" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.88, 1.35, 1.3)
+script = ExtResource("keypad")
+box_size = Vector3(0.2, 0.35, 0.25)
+box_color = Color(0.15, 0.5, 0.2, 1)
+glow = 0.6
+solid = true
+door_path = NodePath("../../ExitDoor")
 
-[node name="Enemy" parent="Gameplay" node_paths=PackedStringArray("patrol_points") instance=ExtResource("2_enemy")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.05, 0)
-patrol_points = [NodePath("../PatrolPoints/P1"), NodePath("../PatrolPoints/P2"), NodePath("../PatrolPoints/P3"), NodePath("../PatrolPoints/P4"), NodePath("../PatrolPoints/P5"), NodePath("../PatrolPoints/P6")]
+[node name="Battery_0" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.18, -3.3)
+script = ExtResource("pickup")
+box_size = Vector3(0.1, 0.15, 0.1)
+box_color = Color(0.95, 0.75, 0.15, 1)
+glow = 0.8
+solid = false
+kind = 0
+item_id = "battery0"
+
+[node name="Battery_1" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.88, 3)
+script = ExtResource("pickup")
+box_size = Vector3(0.1, 0.15, 0.1)
+box_color = Color(0.95, 0.75, 0.15, 1)
+glow = 0.8
+solid = false
+kind = 0
+item_id = "battery1"
+
+[node name="Battery_2" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.08, 1.1)
+script = ExtResource("pickup")
+box_size = Vector3(0.1, 0.15, 0.1)
+box_color = Color(0.95, 0.75, 0.15, 1)
+glow = 0.8
+solid = false
+kind = 0
+item_id = "battery2"
+
+[node name="Battery_3" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6, 0.08, -9.3)
+script = ExtResource("pickup")
+box_size = Vector3(0.1, 0.15, 0.1)
+box_color = Color(0.95, 0.75, 0.15, 1)
+glow = 0.8
+solid = false
+kind = 0
+item_id = "battery3"
+
+[node name="Hide_CorridorLocker" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -11.6, 1.05, 0.7)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_SignalDesk" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -4.6, 0.4, -4.6)
+script = ExtResource("hide")
+box_size = Vector3(1.6, 0.8, 0.9)
+box_color = Color(0.3, 0.22, 0.15, 1)
+glow = 0
+solid = true
+view_offset = Vector3(0, 0.45, 0.1)
+is_under_desk = true
+
+[node name="Hide_StorageLocker" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 1.6, 1.05, 6)
+script = ExtResource("hide")
+box_size = Vector3(1, 2.1, 0.7)
+box_color = Color(0.2, 0.3, 0.27, 1)
+glow = 0
+solid = true
+
+[node name="Hide_ChiefWardrobe" type="StaticBody3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 1.1, -9.25)
+script = ExtResource("hide")
+box_size = Vector3(1.2, 2.2, 0.8)
+box_color = Color(0.25, 0.17, 0.1, 1)
+glow = 0
+solid = true
+view_offset = Vector3(0, 1.5, 0.25)
+
+[node name="FrequencySources" type="Node3D" parent="."]
+
+[node name="Source_0" type="Marker3D" parent="FrequencySources"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.2, -8.5)
+script = ExtResource("source")
+freq_index = 0
+range_m = 7
+
+[node name="Source_1" type="Marker3D" parent="FrequencySources"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 0)
+script = ExtResource("source")
+freq_index = 1
+range_m = 6
+
+[node name="Source_2" type="Marker3D" parent="FrequencySources"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 1.2, 6.5)
+script = ExtResource("source")
+freq_index = 2
+range_m = 6
+
+[node name="ExitDoor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1, 0, 0)
+script = ExtResource("door")
+size = Vector3(0.15, 2.3, 1.6)
+
+[node name="ExitTrigger" type="Area3D" parent="ExitDoor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 1.2, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExitDoor/ExitTrigger"]
+shape = SubResource("Shape_Exit")
