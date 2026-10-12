@@ -16,3 +16,6 @@ data_*/
 mono_crash.*.json
 # Blender backup files (ไม่ได้ใช้ใน Godot)
 *.blend1
+
+# ไฟล์อัปโหลด itch.io (สร้างจาก docs/)
+dist/
