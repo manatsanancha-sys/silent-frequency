@@ -85,16 +85,25 @@ static func volume_row(title: String, bus: String) -> HBoxContainer:
 	return row
 
 
-## overlay เอฟเฟกต์เทป VHS (เส้น scanline + grain + vignette) ทำงานได้ใน Compatibility renderer
-static func vhs_overlay(strength := 1.0) -> ColorRect:
+## เลเยอร์เอฟเฟกต์เทป VHS (scanline + grain + vignette + RGB split) — ใช้ได้ใน Compatibility renderer
+## เป็น CanvasLayer แยก ให้ layer ต่ำกว่า UI เสมอ: shader อ่าน screen texture ตอนวาดเลเยอร์นี้
+## ซึ่งตอนนั้นบนจอมีแค่ภาพ 3D → UI ที่วาดทีหลัง (layer สูงกว่า) จะคมชัด ไม่โดนเอฟเฟกต์
+const VHS_LAYER := 5
+
+static func vhs_layer(strength := 0.6) -> CanvasLayer:
+	var layer := CanvasLayer.new()
+	layer.name = "VhsLayer"
+	layer.layer = VHS_LAYER
 	var r := ColorRect.new()
+	r.name = "Overlay"
 	full_rect(r)
 	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var m := ShaderMaterial.new()
 	m.shader = load(VHS_SHADER)
 	m.set_shader_parameter("strength", strength)
 	r.material = m
-	return r
+	layer.add_child(r)
+	return layer
 
 
 ## ทำให้ปุ่มแรกที่ใช้ได้ได้ focus (เล่นด้วยคีย์บอร์ดได้)

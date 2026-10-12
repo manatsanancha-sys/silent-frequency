@@ -12,6 +12,15 @@ extends Node3D
 @export var heartbeat_range := 16.0
 @export var flicker_range := 11.0
 
+@export_group("VHS effect (เฉพาะภาพ 3D — ไม่ทับ UI)")
+@export var vhs_enabled := true
+@export_range(0.0, 2.0, 0.05) var vhs_strength := 0.6
+@export_range(0.0, 0.01, 0.0005) var vhs_chroma := 0.001
+@export_range(0.0, 0.3, 0.01) var vhs_grain := 0.045
+@export_range(0.0, 1.0, 0.05) var vhs_vignette := 0.5
+## ความบิดเบี้ยวสูงสุดตอนศัตรูไล่ล่า/อยู่ใกล้
+@export_range(0.0, 1.0, 0.05) var vhs_max_distortion := 0.7
+
 @onready var player: Player3D = $Player
 @onready var enemy: EnemyAI = $Enemy
 @onready var hud = $HUD
@@ -21,6 +30,7 @@ var _heartbeat: AudioStreamPlayer
 var _hum: AudioStreamPlayer
 var _flicker_lights: Array[Light3D] = []
 var _light_base_energy := {}
+var _vhs_mat: ShaderMaterial
 
 
 func _ready():
@@ -39,6 +49,7 @@ func _ready():
 	if nav_region.navigation_mesh == null or nav_region.navigation_mesh.get_polygon_count() == 0:
 		nav_region.bake_navigation_mesh(false)
 	hud.bind_player(player)
+	_setup_vhs()
 	var points: Array[Node3D] = []
 	for c in $Waypoints.get_children():
 		points.append(c)
@@ -69,6 +80,18 @@ func _ready():
 		GameState.save_checkpoint(player)
 	GameState.loading_from_save = false
 	hud.refresh_progress()
+
+
+## เอฟเฟกต์ VHS อยู่ใน CanvasLayer layer 5 (ต่ำกว่า HUD = 10, Pause = 100) จึงลงแค่ภาพ 3D
+func _setup_vhs():
+	if not vhs_enabled:
+		return
+	var layer := UiKit.vhs_layer(vhs_strength)
+	add_child(layer)
+	_vhs_mat = layer.get_node("Overlay").material
+	_vhs_mat.set_shader_parameter("chroma", vhs_chroma)
+	_vhs_mat.set_shader_parameter("grain", vhs_grain)
+	_vhs_mat.set_shader_parameter("vignette", vhs_vignette)
 
 
 ## เปิด/ปิดไฟสถานี — announce = เพิ่งกดสวิตช์ (เล่นเอฟเฟกต์ + ปลุกศัตรู)
@@ -138,7 +161,8 @@ func _update_threat(_delta: float):
 		else:
 			l.light_energy = _light_base_energy[l]
 	player.flicker_amount = closeness * 0.8 if (chasing or closeness > 0.5) else 0.0
-	hud.set_distortion(closeness * (1.0 if chasing else 0.5))
+	if _vhs_mat:
+		_vhs_mat.set_shader_parameter("distortion", closeness * (1.0 if chasing else 0.5) * vhs_max_distortion)
 
 
 func _unhandled_input(event):

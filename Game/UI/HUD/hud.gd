@@ -28,7 +28,6 @@ var _keypad_panel: Control
 var _keypad_display: Label
 var _keypad_entry := ""
 var _keypad_target: Node = null
-var _vhs: ColorRect
 
 var _sub_queue: Array = []
 var _sub_timer := 0.0
@@ -50,8 +49,6 @@ func _ready():
 	_build_receiver()
 	_build_note()
 	_build_keypad()
-	_vhs = UiKit.vhs_overlay(0.9)
-	_root.add_child(_vhs)
 	GameState.subtitle_requested.connect(queue_subtitles)
 	GameState.toast_requested.connect(show_toast)
 	GameState.progress_changed.connect(refresh_progress)
@@ -262,6 +259,7 @@ func _build_note():
 	_note_title.add_theme_font_override("font", load("res://assets/fonts/Mali-Regular.ttf"))
 	_note_title.add_theme_font_size_override("font_size", 30)
 	_note_title.add_theme_color_override("font_color", Color(0.3, 0.08, 0.05))
+	_note_title.add_theme_constant_override("outline_size", 0)  # บนกระดาษไม่ต้องมีขอบดำ
 	v.add_child(_note_title)
 	_note_text = RichTextLabel.new()
 	_note_text.theme_type_variation = "NoteLabel"
@@ -272,6 +270,7 @@ func _build_note():
 	var close := Label.new()
 	close.text = "กด E หรือ Esc เพื่อปิด"
 	close.add_theme_color_override("font_color", Color(0.3, 0.25, 0.18))
+	close.add_theme_constant_override("outline_size", 0)
 	close.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	v.add_child(close)
 	paper.add_child(v)
@@ -331,11 +330,6 @@ func _on_receiver_display(mhz: float, strength: float, status: String):
 	_freq_label.text = "%.1f MHz" % mhz
 	_strength_bar.value = strength * 100.0
 	_receiver_status.text = status
-
-
-## ความบิดเบี้ยวของภาพ VHS (0..1) — station.gd ตั้งตามระยะศัตรู
-func set_distortion(amount: float):
-	(_vhs.material as ShaderMaterial).set_shader_parameter("distortion", amount)
 
 
 # ------------------------------------------------------------------ subtitles / toast

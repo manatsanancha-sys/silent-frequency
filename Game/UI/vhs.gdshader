@@ -1,6 +1,6 @@
 shader_type canvas_item;
 // VHS overlay แบบเบา — ใช้ได้ทั้ง Forward+ / Mobile / Compatibility (เว็บ)
-// วางบน ColorRect เต็มจอ (ดู UiKit.vhs_overlay)
+// วางบน ColorRect เต็มจอใน CanvasLayer ที่ layer ต่ำกว่า UI (ดู UiKit.vhs_layer) — ห้ามวางทับ UI
 
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
 uniform float strength : hint_range(0.0, 2.0) = 1.0;

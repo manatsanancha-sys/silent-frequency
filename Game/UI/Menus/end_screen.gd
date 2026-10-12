@@ -45,7 +45,6 @@ func _ready():
 	buttons.add_child(UiKit.button("กลับเมนูหลัก", GameState.go_to_main_menu))
 	v.add_child(buttons)
 	add_child(c)
-	add_child(UiKit.vhs_overlay(1.4))
 	# เฟดเข้า
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, 1.2)
