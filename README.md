@@ -7,7 +7,7 @@
 > แล้วหนีออกไปก่อนรุ่งสาง — โดยมี "มัน" ที่ถูกเสียงวิทยุดึงดูดมาเดินอยู่ในความมืด ผู้เล่นไม่มีอาวุธ
 
 **สถานะ: เล่นจบได้ครบ** (เมนู → ปริศนา 3 ข้อ → ใส่รหัส → ฉากจบ, Game Over/Retry, เซฟ/โหลด) · export เป็นเว็บแล้วที่ `docs/`
-เทสอัตโนมัติ 78 ข้อผ่านทั้งหมด · เช็กลิสต์ให้คนทดสอบ: [TESTING.md](TESTING.md) · งานค้าง: [TODO.md](TODO.md) · task list: [TASKS.md](TASKS.md)
+เทสอัตโนมัติ 82 ข้อผ่านทั้งหมด · เช็กลิสต์ให้คนทดสอบ: [TESTING.md](TESTING.md) · งานค้าง: [TODO.md](TODO.md) · task list: [TASKS.md](TASKS.md)
 
 ---
 
@@ -95,7 +95,7 @@ godot --headless --path . --export-release "Web" docs/index.html
 - renderer = **gl_compatibility** (WebGL 2) ทั้ง desktop และ mobile
 - **ปิด thread support** (`variant/thread_support=false`) → ไม่ต้องใช้ header COOP/COEP, เล่นบน GitHub Pages/itch ได้
 - เอฟเฟกต์ที่**ไม่ได้ใช้/ปิด**: volumetric fog, SSAO, SSIL, SDFGI, SSR, glow — ใช้แค่ fog ธรรมดา (depth fog) + tonemap ที่ Compatibility รองรับ
-- shader night vision ของ camcorder (template) ไม่ได้ใช้ → ใช้ **VHS overlay** แบบ canvas_item (`Game/UI/vhs.gdshader`) แทน ซึ่งทำงานใน Compatibility ได้ → **เปิดไว้**
+- shader night vision ของ camcorder (template) ไม่ได้ใช้ → ใช้ **VHS overlay** แบบ canvas_item (`Game/UI/vhs.gdshader`) แทน ซึ่งทำงานใน Compatibility ได้ → **เปิดไว้เฉพาะภาพ 3D ในด่าน** (ดูหัวข้อ "แก้ VHS ทับ UI")
 - เสียง: หน้า "คลิกเพื่อเริ่ม" ก่อนเมนู (เบราว์เซอร์ต้องมี user gesture ก่อนเล่นเสียง) แสดงครั้งเดียวต่อการเปิดหน้า
 - เมาส์: คลิกในจอเพื่อล็อก, ถ้าเบราว์เซอร์ปลดล็อก (กด Esc) เกมจะเปิดเมนูหยุดให้อัตโนมัติ
 - เซฟใช้ `ConfigFile` ที่ `user://` → บนเว็บ Godot เก็บใน IndexedDB (ทดสอบแล้ว: รีเฟรชหน้าเซฟยังอยู่)
@@ -105,9 +105,22 @@ godot --headless --path . --export-release "Web" docs/index.html
 
 ---
 
+## แก้ VHS ทับ UI (ตัวหนังสือเบลอ/เงาแดง-น้ำเงิน)
+**สาเหตุ:** `UiKit.vhs_overlay()` เป็น ColorRect เต็มจอที่ใช้ `hint_screen_texture` และถูกใส่เป็น**ลูกตัวสุดท้ายของ Control เดียวกับ UI**
+(เมนูหลัก, How to Play, Credits, Game Over, You Win และ HUD) จึงวาดทับ UI และ screen texture ที่มันอ่านมีตัวหนังสือรวมอยู่แล้ว → RGB split ทำให้ตัวหนังสือมีเงาสี
+**แก้:**
+- เมนูทุกหน้า + Pause + Game Over + You Win → **ไม่มีเอฟเฟกต์ VHS แล้ว**
+- ในด่าน เอฟเฟกต์ย้ายไปอยู่ใน **CanvasLayer ของตัวเอง layer 5** (`UiKit.vhs_layer`, สร้างใน `Game/Level/station.gd`) ซึ่งต่ำกว่า HUD (layer 10) และ Pause (layer 100) → shader อ่านจอตอนที่มีแค่ภาพ 3D, HUD วาดทีหลังจึงคมชัด
+- ลดความแรงลง (strength 0.9 → 0.6, chroma 0.0015 → 0.001, grain 0.06 → 0.045) และปรับได้ใน Inspector ของ node **RadioStation** → กลุ่ม *VHS effect*: `vhs_enabled`, `vhs_strength`, `vhs_chroma`, `vhs_grain`, `vhs_vignette`, `vhs_max_distortion`
+- อ่านง่ายขึ้น (`Game/UI/Theme/main_theme.tres`): ขอบดำ outline 3 px ที่ Label/Button/RichText (หัวข้อ 4 px), สีตัวอักษรสว่างขึ้น, ปุ่มที่กดไม่ได้อ่านออก, หน้าวิธีเล่น/เครดิตฟอนต์ 25 px + ระยะบรรทัดเพิ่ม (หน้ากระดาษบันทึกไม่ใส่ขอบดำ)
+- เทสกันพลาด: เมนู/Game Over ต้องไม่มี VHS, ชั้น VHS ต้องต่ำกว่า HUD และ Pause
+- ตรวจบนเว็บ (gl_compatibility) แล้ว: ตัวหนังสือเมนู/HUD คม, scanline/grain ยังอยู่บนภาพ 3D
+
+---
+
 ## ผลการตรวจสอบ
 - **โหลดทุกฉากแบบ headless** (Godot 4.7): ไม่มี script error / warning ตอนรัน
-- **เทสอัตโนมัติ** `godot --headless --path . res://tests/run_tests.tscn` → **PASS 78/78** ครอบคลุม:
+- **เทสอัตโนมัติ** `godot --headless --path . res://tests/run_tests.tscn` → **PASS 82/82** ครอบคลุม:
   เมนู (Continue ปิดเมื่อไม่มีเซฟ) · เกมใหม่ + checkpoint แรก · navmesh มีเส้นทางจากจุดเกิดไปทุก waypoint ·
   ปริศนา 1 (ล็อกตามลำดับ) · จูน 3 คลื่น · บันทึก/เทป 4 ชิ้น · รหัสผิด/ถูก · ประตูเปิด → You Win · เซฟถูกลบหลังชนะ ·
   โดนจับ → Game Over → Retry (ความคืบหน้า/รหัส/ของที่เก็บถูกคืนครบ, ศัตรูเกิดไกล) · Continue จากเมนู · หมดเวลา → Game Over ·
@@ -141,6 +154,8 @@ godot --headless --path . --export-release "Web" docs/index.html
 21. โค้ด template ที่ไม่ใช้ (DemoPlayer, camcorder, crafting, ฉากเดโม) **เก็บไว้ ไม่ลบ** แต่ตัดออกจาก web export · `InteractionBase` ของ template ยังเป็นฐานของ interactable ทุกตัว
 22. ไฟล์ที่ Godot 4.7 สร้างเอง (`.uid`, `.import`) commit ไว้ด้วย
 23. export path คือ `docs/index.html` → ย้ายเอกสารเดิมใน `docs/` ไปไว้ `notes/`
+24. **ปิด VHS ทั้งหมดในหน้าเมนู** แทนการซ้อน layer — หน้าเมนูไม่มีภาพ 3D ให้ใส่เอฟเฟกต์อยู่แล้ว ข้อความจึงชัดที่สุด
+25. ในด่านใช้วิธี **จัด layer** (VHS layer 5 < HUD 10 < Pause 100) และค่า VHS เป็น `@export` บน node ของด่าน (autoload ตั้ง @export ใน Inspector ไม่ได้)
 
 ## สิ่งที่ยังไม่ได้ทำ
 ดู [TODO.md](TODO.md) — หลักๆ: เสียง/โมเดลจริง, ตั้งค่าความไวเมาส์, เล่นบนมือถือ, ภาษาอังกฤษ, การทดสอบด้วยคนตาม TESTING.md
