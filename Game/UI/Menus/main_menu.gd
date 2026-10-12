@@ -42,7 +42,7 @@ func _ready():
 	_build_settings()
 	add_child(UiKit.vhs_overlay(1.2))
 	show_page("main")
-	if OS.has_feature("web"):
+	if OS.has_feature("web") and not GameState.web_audio_unlocked:
 		_build_click_to_start()
 	else:
 		Audio.play_music("ambient_drone", -6.0)
@@ -129,6 +129,7 @@ func _build_click_to_start():
 	c.add_child(v)
 	overlay.add_child(c)
 	overlay.pressed.connect(func():
+		GameState.web_audio_unlocked = true
 		Audio.play_music("ambient_drone", -6.0)
 		overlay.queue_free()
 		UiKit.focus_first(_main_buttons))

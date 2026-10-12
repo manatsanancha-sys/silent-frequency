@@ -196,8 +196,8 @@ node("ConsoleScreen", "MeshInstance3D", "Lights", extra=' groups=["power_screens
 node("RoomLabels", "Node3D")
 for name, label, (x0, x1, z0, z1) in ROOMS:
     node(f"Label_{name}", "Label3D", "RoomLabels", props=[
-        f"transform = {tr((x0 + x1) / 2, 2.55, (z0 + z1) / 2)}",
-        "billboard = 1", "modulate = Color(0.85, 0.8, 0.7, 0.3)",
+        f"transform = {tr((x0 + x1) / 2, 2.75, (z0 + z1) / 2)}",
+        "billboard = 1", "modulate = Color(0.85, 0.8, 0.7, 0.22)", "pixel_size = 0.003",
         'font = ExtResource("font")', "font_size = 40", f'text = "{label}"'])
 
 # ---------------------------------------------------------------- markers

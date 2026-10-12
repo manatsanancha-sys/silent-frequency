@@ -287,41 +287,46 @@ mesh = SubResource("Mesh_Screen")
 [node name="RoomLabels" type="Node3D" parent="."]
 
 [node name="Label_SignalRoom" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.55, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.75, -5.7)
 billboard = 1
-modulate = Color(0.85, 0.8, 0.7, 0.3)
+modulate = Color(0.85, 0.8, 0.7, 0.22)
+pixel_size = 0.003
 font = ExtResource("font")
 font_size = 40
 text = "ห้องรับสัญญาณ"
 
 [node name="Label_Corridor" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
 billboard = 1
-modulate = Color(0.85, 0.8, 0.7, 0.3)
+modulate = Color(0.85, 0.8, 0.7, 0.22)
+pixel_size = 0.003
 font = ExtResource("font")
 font_size = 40
 text = "ทางเดิน"
 
 [node name="Label_Storage" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.55, 4.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.75, 4.7)
 billboard = 1
-modulate = Color(0.85, 0.8, 0.7, 0.3)
+modulate = Color(0.85, 0.8, 0.7, 0.22)
+pixel_size = 0.003
 font = ExtResource("font")
 font_size = 40
 text = "ห้องเก็บของ"
 
 [node name="Label_ChiefOffice" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.55, -5.7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.75, -5.7)
 billboard = 1
-modulate = Color(0.85, 0.8, 0.7, 0.3)
+modulate = Color(0.85, 0.8, 0.7, 0.22)
+pixel_size = 0.003
 font = ExtResource("font")
 font_size = 40
 text = "ห้องหัวหน้าสถานี"
 
 [node name="Label_Lobby" type="Label3D" parent="RoomLabels"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 2.55, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.1, 2.75, 0)
 billboard = 1
-modulate = Color(0.85, 0.8, 0.7, 0.3)
+modulate = Color(0.85, 0.8, 0.7, 0.22)
+pixel_size = 0.003
 font = ExtResource("font")
 font_size = 40
 text = "โถงประตูทางออก"
