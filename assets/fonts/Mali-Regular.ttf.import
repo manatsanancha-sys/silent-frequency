@@ -2,13 +2,13 @@
 
 importer="font_data_dynamic"
 type="FontFile"
-uid="uid://cq7lh8fkj1sgr"
-path="res://.godot/imported/Itim-Regular.ttf-dd692fff8186d987a05fc3121ffbc2c7.fontdata"
+uid="uid://cevk05cg3hlf6"
+path="res://.godot/imported/Mali-Regular.ttf-ae498d96623ab3e74eb13ae17ccd7a50.fontdata"
 
 [deps]
 
-source_file="res://assets/fonts/Itim-Regular.ttf"
-dest_files=["res://.godot/imported/Itim-Regular.ttf-dd692fff8186d987a05fc3121ffbc2c7.fontdata"]
+source_file="res://assets/fonts/Mali-Regular.ttf"
+dest_files=["res://.godot/imported/Mali-Regular.ttf-ae498d96623ab3e74eb13ae17ccd7a50.fontdata"]
 
 [params]
 

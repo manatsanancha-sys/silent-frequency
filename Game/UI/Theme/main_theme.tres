@@ -2,7 +2,7 @@
 
 [ext_resource type="FontFile" path="res://assets/fonts/Sarabun-Regular.ttf" id="1_body"]
 [ext_resource type="FontFile" path="res://assets/fonts/Trirong-Bold.ttf" id="2_title"]
-[ext_resource type="FontFile" path="res://assets/fonts/Itim-Regular.ttf" id="3_note"]
+[ext_resource type="FontFile" path="res://assets/fonts/Mali-Regular.ttf" id="3_note"]
 [ext_resource type="FontFile" path="res://assets/fonts/Sarabun-Bold.ttf" id="4_bold"]
 
 [sub_resource type="StyleBoxFlat" id="Btn_Normal"]

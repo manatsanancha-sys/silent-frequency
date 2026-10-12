@@ -12,7 +12,7 @@ MIT License — github.com/ThiDiamondDev/horror-fps-template
 [b]ฟอนต์ (SIL Open Font License 1.1)[/b]
 Sarabun — The Sarabun Project Authors / Cadson Demak
 Trirong — Cadson Demak
-Itim — Cadson Demak, Pablo Impallari
+Mali — The Mali Project Authors / Cadson Demak (หน้าบันทึกลายมือ)
 
 [b]เสียง[/b]
 เสียงทั้งหมดสร้างแบบ procedural ด้วยสคริปต์ Python (tools/gen_audio.py)
