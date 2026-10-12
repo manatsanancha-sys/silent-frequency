@@ -9,7 +9,7 @@
 
 ## วิธีเปิดโปรเจกต์
 
-1. ติดตั้ง **Godot 4.3 ขึ้นไป** (เวอร์ชันมาตรฐาน ไม่ใช่ .NET) จาก <https://godotengine.org/download>
+1. ติดตั้ง **Godot 4.3 ขึ้นไป** (ตอนนี้โปรเจกต์ถูกเปิด/ทดสอบด้วย **4.7**) (เวอร์ชันมาตรฐาน ไม่ใช่ .NET) จาก <https://godotengine.org/download>
 2. ติดตั้ง **Blender** (3.6+ หรือ 4.x) แล้วใน Godot ไปที่ `Editor > Editor Settings > FileSystem > Import > Blender` ตั้ง **Blender Path**
    (template ใช้ไฟล์ `.blend` สำหรับประตู/กุญแจ/แบตในฉากเดโมเดิม — ฉากหลักของเราไม่ต้องใช้ แต่ถ้าไม่ตั้ง editor จะแจ้ง error ตอน import)
 3. เปิด Godot → **Import** → เลือกไฟล์ `silent-frequency/project.godot`
@@ -26,6 +26,7 @@
 | **C** | ย่อตัว (ตอนนี้แค่เปลี่ยนสถานะ ยังไม่เปลี่ยนท่า) |
 | **E** | interact / เก็บของ / เข้า-ออกตู้ซ่อนตัว |
 | I | inventory (เลือก Power Cell แล้วกด Use เพื่อชาร์จไฟฉาย) |
+| **Esc** | เปิด/ปิดเมนูหยุดเกม (Resume / Quit) — ปล่อยเมาส์ตอนเปิด |
 
 ---
 
@@ -87,24 +88,52 @@ silent-frequency/
 - [x] Placeholder: AI ศัตรู 3 state — สำรวจ (PATROL) / ได้ยินเสียงแล้วมาดู (INVESTIGATE) / ไล่ล่า (CHASE) มี logic ขั้นต่ำให้เดินได้จริง
 - [x] ปิดระบบ crafting (flag `CRAFTING_ENABLED := false` ใน `Inventory/UI/Inventory.gd`) — **ไม่ได้ลบไฟล์**
 - [x] แก้บั๊กเล็กของ template: `Player.unset_selected_item()` ที่ถูกเรียกแต่ไม่มีอยู่จริง
+- [x] เมนูหยุดเกม (Esc) แก้ปัญหาเมาส์ถูกล็อกตลอด — ดูหัวข้อ "เมนูหยุดเกม (Esc)"
 
 ### ⏳ ยังไม่ทำ (TODO)
 - [ ] UI หน้าปัดวิทยุของ Frequency Finder + เสียงซ่า/เสียงพูด (AudioStreamPlayer)
 - [ ] ซ่อนตัวจริง: ย้ายกล้องเข้าตู้, ล็อกการเดิน, กลั้นหายใจ
 - [ ] ย่อตัวจริง: ลดความสูง collision + ความเร็ว, เสียงฝีเท้าส่งเข้า NoiseBus
 - [ ] ศัตรูใช้ NavigationAgent3D + bake navmesh (ตอนนี้เดินเป็นเส้นตรงระหว่างจุด)
-- [ ] Game over / jumpscare / เมนูหลัก / เซฟ
+- [ ] Game over / jumpscare / เมนูหลัก / เซฟ / หน้า Settings ในเมนูหยุดเกม
 - [ ] เนื้อเรื่อง, ประตูล็อก/กุญแจในสถานี, เสียงบรรยากาศ
 - [ ] เปลี่ยน greybox เป็นโมเดลจริง
-- [ ] ทดสอบใน Godot editor จริง (ดูหัวข้อผลการตรวจด้านล่าง)
+
+---
+
+## เมนูหยุดเกม (Esc)
+
+**ปัญหาเดิม:** กด F5 แล้วเมาส์ถูกล็อก (`MOUSE_MODE_CAPTURED`) ตลอด กด Esc ไม่เกิดอะไร เพราะ template **ไม่มี pause menu** และโค้ดที่ล็อกเมาส์มีที่เดียวคือ `DemoPlayer/PlayerController.gd` (ใน `_ready()` และ `enable_camera_movement()`; ส่วนการกด I เปิด inventory จะปล่อยเมาส์เป็น `MOUSE_MODE_VISIBLE`)
+
+**ที่แก้:**
+| ไฟล์ | เปลี่ยนอะไร |
+|---|---|
+| `Game/UI/PauseMenu/pause_menu.tscn` | **ใหม่** — CanvasLayer (layer 100, `process_mode = Always`) พื้นหลังมืด + ปุ่ม **Resume** และ **Quit** |
+| `Game/UI/PauseMenu/pause_menu.gd` | **ใหม่** — รับ `ui_cancel` (**Esc**) เปิด/ปิดเมนู · เปิด: `get_tree().paused = true` + `MOUSE_MODE_VISIBLE` + โฟกัสปุ่ม Resume · ปิด: unpause + `MOUSE_MODE_CAPTURED` · Quit: `get_tree().quit()` |
+| `project.godot` | เพิ่ม autoload `PauseMenu` → ใช้ได้ทุกฉากโดยไม่ต้องวางในฉาก |
+| `tests/pause_test.tscn` / `.gd` | **ใหม่** — เทสอัตโนมัติ |
+
+**ปุ่มที่ผูก:** `ui_cancel` (action มาตรฐานของ Godot = **Esc**) ไม่ได้เพิ่ม action ใหม่ใน Input Map
+
+**ทำไมกล้อง/การเดินหยุด:** ตอน `paused = true` node ที่เป็น `PROCESS_MODE_PAUSABLE` (ค่าปกติของทุก node ในฉาก) จะไม่ได้รัน `_process`, `_physics_process` และ `_input` → `demo_player.gd` ไม่หมุนกล้อง ไม่เดิน, ไฟฉายไม่กินแบต, ศัตรูหยุด, กด I/Q/F ไม่ทำงาน มีแค่เมนูที่เป็น `Always`
+
+**ผลทดสอบ** (Godot 4.7 headless, `tests/pause_test.tscn` — จำลองกด Esc, ขยับเมาส์ 300px, กด W 30 เฟรม): **ผ่าน 11/11**
+- ตอน pause: yaw ผู้เล่น / pitch กล้อง / ตำแหน่ง ไม่เปลี่ยน ✅
+- หลัง resume: หมุนกล้องและเดินได้ตามปกติ ✅ (ยืนยันว่าเทสจับการเปลี่ยนแปลงได้จริง)
+- ปุ่ม Resume ปิดเมนูได้ ✅
+- ⚠️ โหมดเมาส์ (`CAPTURED`/`VISIBLE`) เทสใน headless ไม่ได้ (ไม่มีหน้าต่างจริง) ให้ลองกด F5 เช็กด้วยตาอีกครั้ง
+
+รันเทสเอง:
+```bash
+godot --headless --path . res://tests/pause_test.tscn
+```
+
+> ทิป: ใน editor ถ้าเกมค้างจริงๆ กด **F8** (Stop Running Project) หยุดได้เสมอ
 
 ---
 
 ## ผลการตรวจ headless
-**ข้าม** — เครื่องที่ตั้งโปรเจกต์ไม่มีคำสั่ง `godot` / `godot4` ใน PATH จึงยังไม่ได้รัน `godot --headless` เช็ก error
-
-ไฟล์ `.tscn` และ `.gd` ที่เพิ่มใหม่เขียนด้วยมือ/สคริปต์ (ไม่ได้ผ่าน editor) **ครั้งแรกที่เปิดให้ดู Output/Debugger** ถ้ามี error ให้แก้ตามนั้น
-ถ้าติดตั้ง Godot แล้วอยากเช็กเอง:
+รันด้วย Godot 4.7 (`--headless --path . --quit-after 60`) ฉากหลักโหลดและรันได้ **ไม่มี script error** เหลือแค่คำเตือนตอนปิดโปรแกรม (`ObjectDB instances were leaked` / `resources still in use`) ซึ่งเป็นเรื่องปกติของการ quit แบบ headless ไม่กระทบตอนเล่น
 ```bash
 godot --headless --path . --import
 godot --headless --path . --quit-after 120
@@ -126,6 +155,11 @@ godot --headless --path . --quit-after 120
 11. renderer คงเป็น **Mobile** ตาม template
 12. ไฟล์ `*.blend1` (backup ของ Blender) ไม่ถูก commit เพื่อลดขนาด repo
 13. README ต้นฉบับของ template ย้ายไปไว้ที่ [docs/TEMPLATE_README_original.md](docs/TEMPLATE_README_original.md)
+14. **ทำ pause menu ใหม่** เพราะ template ไม่มีอยู่เลย (มีแค่หน้าจอ inventory ที่ไม่ได้ pause เกม)
+15. เมนูหยุดเกมเป็น **autoload** แทนการวางในฉาก เพื่อให้ทำงานทั้งใน `radio_station.tscn` และฉากเดโมเดิม
+16. ถ้ากด Esc ตอนเปิด inventory อยู่ → ตอน Resume จะ**คืนเมาส์เป็น VISIBLE** (ไม่ล็อก) เพื่อไม่ให้ inventory ใช้เมาส์ไม่ได้; กรณีปกติคืนเป็น CAPTURED ตามที่กำหนด
+17. ปุ่ม Quit = ปิดเกมทันที (ยังไม่มีเมนูหลักให้กลับไป, ยังไม่มีหน้ายืนยัน)
+18. การเปลี่ยนแปลงที่ Godot 4.7 editor ทำเอง (ไฟล์ `.uid`, `.import`, `config/features="4.7"`) commit แยกไว้ 1 commit ตามที่ editor สร้าง
 
 ---
 
